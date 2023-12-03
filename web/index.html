@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="main">
+        <div class="professor"></div>
+        <div class="classroom" id="classroom"></div>
+        <div class="queue" id="queue"></div>
+    </div>
+    <p>
+        Currently people in queue: <span id="queue-length"></span>
+    </p>
+    <p>
+        People in classroom: <span id="classroom-length"></span>
+    </p>
+    <button id="add-task">Add student</button>
+    <input type="text" id="task-time" placeholder="Task time" value="12000"></input>
+    <script>
+
+        const classroomElement = document.getElementById('classroom');
+        const queueElement = document.getElementById('queue');
+        const queueLengthElement = document.getElementById('queue-length');
+        const classroomLengthElement = document.getElementById('classroom-length');
+        const addTaskButton = document.getElementById('add-task');
+        const taskTimeInput = document.getElementById('task-time');
+
+        queue.addListener(() => {
+            const itemsInQueue = queue.length();
+
+            queueLengthElement.innerHTML = itemsInQueue;
+
+            // clear queue div
+            queueElement.innerHTML = '';
+
+            // fill queue div with queue divs
+            for (let i = 0; i < itemsInQueue; i++) {
+                const div = document.createElement('div');
+                div.className = 'student';
+                div.innerHTML = queue.queue[i].name;
+                queueElement.appendChild(div);
+            }
+
+        });
+
+        consumer.addListener(() => {
+            console.log("consumer")
+            const currentlyProcessing = consumer.currentlyProcessing.length;
+
+            classroomLengthElement.innerHTML = currentlyProcessing;
+
+            // clear classroom div
+            classroomElement.innerHTML = '';
+
+            // fill classroom div with currentlyProcessing divs
+            for (let i = 0; i < currentlyProcessing; i++) {
+                const div = document.createElement('div');
+                div.className = 'student';
+                div.innerHTML = consumer.currentlyProcessing[i].name;
+                classroomElement.appendChild(div);
+            }
+        })
+
+
+        function createTask({ id, name, time }) {
+            queue.push({
+                id,
+                name,
+                time,
+                executor: () => new Promise((res, rej) => {
+                    console.log('Start ' + id);
+                    setTimeout(() => {
+                        console.log('End ' + id);
+                        res();
+                    }, time);
+                })
+            });
+        }
+
+        async function createTasks() {
+            for (let i = 0; i < 10; i++) {
+                createTask({
+                    name: i,
+                    time: 12000,
+                    id: 'Task' + i
+                });
+                await new Promise((res, rej) => setTimeout(res, 1000));
+            }
+        }
+
+        createTasks();
+
+        let i = 10;
+
+        addTaskButton.addEventListener('click', () => {
+            createTask({
+                name: i++,
+                time: Number(taskTimeInput.value || 1000),
+                id: 'Task' + Math.random()
+            });
+        });
+    </script>
+</body>
+
+</html>

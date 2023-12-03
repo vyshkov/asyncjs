@@ -1,0 +1,35 @@
+.main {
+    display: flex;
+}
+
+.professor {
+    /* smile with beird */
+    background-image: url("https://cdn3.iconfinder.com/data/icons/emojis-beard/512/emoji-sonriente-barba-512.png");
+    background-size: cover;
+    width: 100px;
+    height: 100px;
+}
+
+.classroom {
+    display: flex;
+    flex: 1;
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+}
+
+.queue {
+    display: flex;
+    flex: 1;
+    background-color: bisque;
+    border: 1px solid #ddd;
+}
+
+.student {
+    /* circle */
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: aquamarine;
+    text-align: center;
+    margin: 5px;
+}
